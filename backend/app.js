@@ -22,6 +22,6 @@ app.get('/health', async (req, res) => {
 
 app.use('/user', userRouter);
 // app.use('/product', productRouter);
-// app.use('/auth', authRouter);
+app.use('/auth', authRouter);
 
 module.exports = app;
