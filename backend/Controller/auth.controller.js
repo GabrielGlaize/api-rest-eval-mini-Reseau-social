@@ -5,7 +5,7 @@ const passwordComplexity = require("joi-password-complexity");
 require('dotenv').config();
 
 exports.login = async (req, res) => {
-    let user = await User.scope('withPassword').findOne({
+    let user = await User.findOne({
         where : {
             email: req.body.email
         }
@@ -21,6 +21,15 @@ exports.login = async (req, res) => {
         id: user.id,
     }, process.env.JWT_KEY);
     return res.status(200).json(token);
+}
+
+exports.logout = async (req, res) => {
+    const token = req.token;
+    if (!token) {
+        return res.status(400).json({ error: 'Token manquant' });
+    }
+    revokedTokens.add(token);
+    return res.status(200).json({ message: 'Déconnexion réussie' });
 }
 
 exports.signin = async (req, res) => {
