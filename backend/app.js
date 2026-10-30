@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const database = require('./config/database.js');
-// const userRouter = require('./route/user.route.js');
+const userRouter = require('./route/user.route.js');
 // const productRouter = require('./route/product.route.js');
 // const authRouter = require('./route/auth.route.js');
 // const { limiter } = require('./middleware/limiter.middleware.js');
@@ -20,7 +20,7 @@ app.get('/health', async (req, res) => {
     }
 });
 
-// app.use('/user', userRouter);
+app.use('/user', userRouter);
 // app.use('/product', productRouter);
 // app.use('/auth', authRouter);
 
