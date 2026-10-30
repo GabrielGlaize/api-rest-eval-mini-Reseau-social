@@ -3,7 +3,7 @@ const app = express();
 const database = require('./config/database.js');
 const userRouter = require('./route/user.route.js');
 // const productRouter = require('./route/product.route.js');
-// const authRouter = require('./route/auth.route.js');
+ const authRouter = require('./route/auth.route.js');
 // const { limiter } = require('./middleware/limiter.middleware.js');
 
 app.use(express.json());
