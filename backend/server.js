@@ -1,6 +1,6 @@
 const http = require('http');
 const app = require('./app');
-// const {associate} = require('./config/association.js');
+const { associate } = require('./config/association.js');
 const database = require('./config/database.js');
 
 async function launch() {
@@ -12,7 +12,7 @@ async function launch() {
         });
 
         await database.authenticate();
-        // await associate();
+        associate();
         console.log('Connected to the database successfully.');
         server.listen(3001);
     }
