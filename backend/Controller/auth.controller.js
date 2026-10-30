@@ -4,18 +4,38 @@ const jwt = require('jsonwebtoken');
 const passwordComplexity = require("joi-password-complexity");
 require('dotenv').config();
 
+function getCredentials(req) {
+    const body = req.body;
+    if (!body || typeof body !== 'object' || Array.isArray(body)) {
+        return null;
+    }
+
+    const { username, password } = body;
+    if (typeof username !== 'string' || !username.trim() ||
+        typeof password !== 'string' || !password) {
+        return null;
+    }
+
+    return { username: username.trim(), password };
+}
+
 exports.login = async (req, res) => {
+    const credentials = getCredentials(req);
+    if (!credentials) {
+        return res.status(400).json({ error: 'Nom dutilisateur et mot de passe requis' });
+    }
+
     let user = await User.findOne({
         where : {
-            email: req.body.email
+            username: credentials.username
         }
     });
     if(!user){
-        return res.status(400).json("Login or password incorrect");
+        return res.status(400).json({ error: "Login or password incorrect" });
     }
-    const valid = await bcrypt.compare(req.body.password, user.password);
+    const valid = await bcrypt.compare(credentials.password, user.password);
     if(!valid){
-        return res.status(400).json("Login or password incorrect");
+        return res.status(400).json({ error: "Login or password incorrect" });
     }
     const token = jwt.sign({
         id: user.id,
@@ -33,20 +53,25 @@ exports.logout = async (req, res) => {
 }
 
 exports.signin = async (req, res) => {
+    const credentials = getCredentials(req);
+    if (!credentials) {
+        return res.status(400).json({ error: 'Nom dutilisateur et mot de passe requis' });
+    }
+
     let user = await User.findOne({
         where : {
-            email: req.body.email
+            username: credentials.username
         }
     });
     if(user){
         return res.status(400).json("User already exists");
     }
-    if(!passwordComplexity().validate(req.body.password).error){
+    if(passwordComplexity().validate(credentials.password).error){
         return res.status(400).json("Password is not complex enough");
     }
-    const hash = await bcrypt.hash(req.body.password, 10);
+    const hash = await bcrypt.hash(credentials.password, 10);
     const newUser = await User.create({
-        email: req.body.email,
+        username: credentials.username,
         password: hash
     });
     res.status(201).json(newUser);

@@ -2,24 +2,23 @@ const User = require('./../model/user.model.js');
 
 exports.create = async (req, res) => {
     const user = await User.create({
-        email: req.body.email,
+        username: req.body.username,
         password: req.body.password
     });
     res.status(201).json(user);
 }
 
-exports.getMe = async (req, res) => {
-    const user = await User.findOne({
-        where: {
-            id: req.user.id
-        }
-    });
-    res.status(200).json(user);
-}
-
 exports.getAll = async (req, res) => {
     const listUser = await User.findAll();
     res.status(200).json(listUser);
+}
+
+exports.getMe = async (req, res) => {
+    const user = await User.findByPk(req.payload.id);
+    if (!user) {
+        return res.status(404).json("User not found");
+    }
+    return res.status(200).json(user);
 }
 
 exports.getById = async (req, res) => {
@@ -30,6 +29,8 @@ exports.getById = async (req, res) => {
     });
     res.status(200).json(user);
 }
+
+
 
 exports.update = async (req, res) => {
     const user = await User.findOne({
