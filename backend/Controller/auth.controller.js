@@ -31,16 +31,16 @@ exports.login = async (req, res) => {
         }
     });
     if(!user){
-        return res.status(400).json({ error: "Login or password incorrect" });
+        return res.status(401).json({ error: "Login or password incorrect" });
     }
     const valid = await bcrypt.compare(credentials.password, user.password);
     if(!valid){
-        return res.status(400).json({ error: "Login or password incorrect" });
+        return res.status(401).json({ error: "Login or password incorrect" });
     }
     const token = jwt.sign({
         id: user.id,
     }, process.env.JWT_KEY);
-    return res.status(200).json(token);
+    return res.status(200).json({ token, user: { id: user.id, username: user.username } });
 }
 
 exports.logout = async (req, res) => {
@@ -50,6 +50,14 @@ exports.logout = async (req, res) => {
     }
     revokedTokens.add(token);
     return res.status(200).json({ message: 'Déconnexion réussie' });
+}
+
+exports.getMe = async (req, res) => {
+    const user = await User.findByPk(req.payload.id);
+    if (!user) {
+        return res.status(404).json({ error: "User not found" });
+    }
+    return res.status(200).json({ id: user.id, username: user.username });
 }
 
 exports.register = async (req, res) => {
@@ -64,9 +72,9 @@ exports.register = async (req, res) => {
         }
     });
     if(user){
-        return res.status(400).json({ error: "User already exists" });
+        return res.status(409).json({ error: "User already exists" });
     }
-    if(passwordComplexity({ min: 6 }).validate(credentials.password).error){
+    if(passwordComplexity().validate(credentials.password).error){
         return res.status(400).json({ error: "Password is not complex enough" });
     }
     const hash = await bcrypt.hash(credentials.password, 10);
@@ -74,5 +82,6 @@ exports.register = async (req, res) => {
         username: credentials.username,
         password: hash
     });
-    res.status(201).json(newUser);
+    const token = jwt.sign({ id: newUser.id }, process.env.JWT_KEY);
+    res.status(201).json({ token, user: { id: newUser.id, username: newUser.username } });
 }
