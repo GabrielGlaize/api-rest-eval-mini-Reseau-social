@@ -3,7 +3,7 @@ const app = express();
 const database = require('./config/database.js');
 const userRouter = require('./route/user.route.js');
 // const productRouter = require('./route/product.route.js');
-// const authRouter = require('./route/auth.route.js');
+ const authRouter = require('./route/auth.route.js');
 // const { limiter } = require('./middleware/limiter.middleware.js');
 
 app.use(express.json());
@@ -22,6 +22,6 @@ app.get('/health', async (req, res) => {
 
 app.use('/user', userRouter);
 // app.use('/product', productRouter);
-// app.use('/auth', authRouter);
+app.use('/auth', authRouter);
 
 module.exports = app;
