@@ -1,25 +1,27 @@
-const database = require('../config/database.js');
+const database = require('./../config/database.js');
 const { DataTypes } = require('sequelize');
 
-
 const User = database.define('User', {
-            id: {
-                type: DataTypes.UUID,
-                primaryKey: true,
-                defaultValue: DataTypes.UUIDV4
-            },
-            email: {
-                type: DataTypes.STRING,
-                allowNull: false,
-                unique: true
-            },
-            password: {
-                type: DataTypes.STRING,
-                allowNull: false
-            }
-        }, {
-            tableName: 'users',
-        });
+    id: {
+        type: DataTypes.UUID,
+        primaryKey: true,
+        defaultValue: DataTypes.UUIDV4
+    },
+    username: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true
+    },
+    password: {
+        type: DataTypes.STRING,
+        allowNull: false
+    }
+}, {
+    tableName: "users"
+});
+
+module.exports = User;
+
 
 function findAll() {
     return User.findAll();
