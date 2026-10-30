@@ -6,6 +6,8 @@ router.get('/', userController.getAll);
 
 router.get('/:id', userController.getById);
 
+router.get('/me', userController.getMe);
+
 router.get('/filter/:name/:limit', (req, res, next) => {
     res.status(200).json("Filtre des utilisateur, name:" + req.params.name + " limit:" + req.params.limit);
 });
