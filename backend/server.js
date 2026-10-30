@@ -11,7 +11,7 @@ async function launch() {
             console.log('Serveur en écoute sur le port ' + server.address().port);
         });
 
-        // await database.authenticate();
+        await database.authenticate();
         // await associate();
         console.log('Connected to the database successfully.');
         server.listen(3001);
