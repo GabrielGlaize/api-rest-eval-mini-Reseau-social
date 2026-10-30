@@ -52,7 +52,7 @@ exports.logout = async (req, res) => {
     return res.status(200).json({ message: 'Déconnexion réussie' });
 }
 
-exports.signin = async (req, res) => {
+exports.register = async (req, res) => {
     const credentials = getCredentials(req);
     if (!credentials) {
         return res.status(400).json({ error: 'Nom dutilisateur et mot de passe requis' });
@@ -64,10 +64,10 @@ exports.signin = async (req, res) => {
         }
     });
     if(user){
-        return res.status(400).json("User already exists");
+        return res.status(400).json({ error: "User already exists" });
     }
-    if(passwordComplexity().validate(credentials.password).error){
-        return res.status(400).json("Password is not complex enough");
+    if(passwordComplexity({ min: 6 }).validate(credentials.password).error){
+        return res.status(400).json({ error: "Password is not complex enough" });
     }
     const hash = await bcrypt.hash(credentials.password, 10);
     const newUser = await User.create({

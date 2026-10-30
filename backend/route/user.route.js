@@ -5,8 +5,6 @@ const { auth } = require('./../middleware/auth.middleware.js');
 
 router.get('/', userController.getAll);
 
-router.get('/me', auth, userController.getMe);
-
 router.get('/filter/:name/:limit', (req, res, next) => {
     res.status(200).json("Filtre des utilisateur, name:" + req.params.name + " limit:" + req.params.limit);
 });
