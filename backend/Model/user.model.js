@@ -1,7 +1,11 @@
 const database = require('./../config/database.js');
 const { DataTypes } = require('sequelize');
+const authController = require('../Controller/auth.controller.js');
+const userController = require('../Controller/user.controller.js');
+const { auth } = require('../Middleware/auth.middleware.js');
 
 const User = database.define('User', {
+    
     id: {
         type: DataTypes.UUID,
         primaryKey: true,
