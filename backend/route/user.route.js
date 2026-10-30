@@ -1,40 +1,20 @@
-const database = require('../config/database.js');
-const { DataTypes } = require('sequelize');
+const express = require('express');
+const router = express.Router();
+const userController = require('./../controller/user.controller.js');
 
+router.get('/', userController.getAll);
 
-const User = database.define('User', {
-            email: {
-                type: DataTypes.STRING,
-                allowNull: false,
-                unique: true
-            },
-            password: {
-                type: DataTypes.STRING,
-                allowNull: false
-            }
-        }, {
-            tableName: 'users',
-        });
+router.get('/:id', userController.getById);
 
-function findAll() {
-    return User.findAll();
-}
+router.get('/filter/:name/:limit', (req, res, next) => {
+    res.status(200).json("Filtre des utilisateur, name:" + req.params.name + " limit:" + req.params.limit);
+});
 
-function findByPk(id) {
-    return User.findByPk(id);
-}
+router.post('/', userController.create);
 
-async function create(userData) {
-    const user = await User.create(userData);
-    return user;
-}
+router.put('/:id', userController.update);
 
-async function update(id, userData) {
-    const user = await User.findByPk(id);
-    if (user) {
-        await user.update(userData);
-        return user;
-    }
-    return null;
-}
-module.exports = User;
+router.delete('/:id', userController.delete);
+
+module.exports = router;
+
