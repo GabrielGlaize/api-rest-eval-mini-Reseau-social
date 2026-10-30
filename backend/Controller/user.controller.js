@@ -8,6 +8,15 @@ exports.create = async (req, res) => {
     res.status(201).json(user);
 }
 
+exports.getMe = async (req, res) => {
+    const user = await User.findOne({
+        where: {
+            id: req.user.id
+        }
+    });
+    res.status(200).json(user);
+}
+
 exports.getAll = async (req, res) => {
     const listUser = await User.findAll();
     res.status(200).json(listUser);
