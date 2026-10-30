@@ -8,6 +8,11 @@ const app = express();
 app.use(express.json());
 // app.use(limiter(5,100));
 
+//route pour vérifier si le serveur est en ligne
+app.get('/health', (req, res) => {
+    res.status(200).json({ status: 'ok' });
+});
+
 // app.use('/user', userRouter);
 // app.use('/product', productRouter);
 // app.use('/auth', authRouter);
